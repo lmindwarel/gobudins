@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/lmindwarel/models"
 	"github.com/pkg/errors"
 )
 
@@ -93,7 +92,7 @@ func (ctrl *Controller) request(method string, route string, queryParams map[str
 	success := resp.StatusCode >= 200 && resp.StatusCode < 300
 
 	if responseData != nil || !success {
-		var errData models.ErrorResponse
+		var errData ErrorResponse
 
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {

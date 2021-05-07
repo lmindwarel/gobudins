@@ -3,13 +3,12 @@ package main
 import (
 	"net/http"
 
-	"github.com/lmindwarel/models"
 	"github.com/pkg/errors"
 )
 
-func (ctrl *Controller) GetToken(ccd models.ConnectCallbackData) (token string, err error) {
-	var authToken models.GetAccessTokenResponse
-	err = ctrl.request(http.MethodPost, models.RouteAccessToken, nil, models.AskForToken{
+func (ctrl *Controller) GetToken(ccd ConnectCallbackData) (token string, err error) {
+	var authToken GetAccessTokenResponse
+	err = ctrl.request(http.MethodPost, RouteAccessToken, nil, AskForToken{
 		Code:         ccd.Code,
 		ClientID:     ctrl.config.ClientID,
 		ClientSecret: ctrl.config.ClientSecret,

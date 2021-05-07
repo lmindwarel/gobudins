@@ -1,4 +1,4 @@
-package models
+package main
 
 const (
 	RouteAccessToken = "/auth/token/access"
