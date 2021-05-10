@@ -1,15 +1,26 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-type Listener struct {
+	"github.com/gin-gonic/gin"
+	"github.com/lmindwarel/budget-insight-go/models"
+)
+
+type WebhooksListeners struct {
 	OnUserCreated func(WebhookUser)
 }
 
-func (a *Controller) setupRoutes(e *gin.RouterGroup) {
-	e.POST("/user-create", a.UserCreated)
+func (ctrl *Controller) SetupRoutesGin(e *gin.RouterGroup) {
+	e.POST("/user-create", ctrl.UserCreated)
 }
 
-func (a *Controller) UserCreated(c *gin.Context) {
+func (ctrl *Controller) UserCreated(c *gin.Context) {
+	var user models.WebhookUser
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
 
+	ctrl.WebhooksListeners.OnUserCreated(user)
 }

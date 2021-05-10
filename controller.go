@@ -19,8 +19,9 @@ type Config struct {
 
 // Controller is the struct for budget insight controller
 type Controller struct {
-	config     Config
-	httpClient *http.Client
+	config            Config
+	httpClient        *http.Client
+	WebhooksListeners WebhooksListeners
 }
 
 // New create new budget insight controller
