@@ -1,4 +1,4 @@
-package main
+package gobudins
 
 const (
 	RouteAccessToken = "/auth/token/access"
