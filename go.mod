@@ -1,4 +1,4 @@
-module github.com/lmindwarel/budget-insight-go
+module github.com/lmindwarel/gobudins
 
 go 1.15
 

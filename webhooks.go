@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lmindwarel/budget-insight-go/models"
+	"github.com/lmindwarel/gobudins"
 )
 
 type WebhooksListeners struct {
@@ -16,7 +16,7 @@ func (ctrl *Controller) SetupRoutesGin(e *gin.RouterGroup) {
 }
 
 func (ctrl *Controller) UserCreated(c *gin.Context) {
-	var user models.WebhookUser
+	var user gobudins.WebhookUser
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
