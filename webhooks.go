@@ -21,5 +21,5 @@ func (ctrl *Controller) UserCreated(c *gin.Context) {
 		return
 	}
 
-	ctrl.WebhooksListeners.OnUserCreated(user)
+	ctrl.listeners.OnUserCreated(user)
 }

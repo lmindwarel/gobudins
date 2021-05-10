@@ -19,16 +19,17 @@ type Config struct {
 
 // Controller is the struct for budget insight controller
 type Controller struct {
-	config            Config
-	httpClient        *http.Client
-	WebhooksListeners WebhooksListeners
+	config     Config
+	httpClient *http.Client
+	listeners  WebhooksListeners
 }
 
 // New create new budget insight controller
-func NewController(config Config) *Controller {
+func NewController(config Config, listeners WebhooksListeners) *Controller {
 	return &Controller{
 		config:     config,
 		httpClient: &http.Client{},
+		listeners:  listeners,
 	}
 }
 
