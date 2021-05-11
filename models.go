@@ -28,6 +28,8 @@ type GetAccessTokenResponse struct {
 	TokenType   string `json:"token_type"`
 }
 
+const UserMe = "me"
+
 type User struct {
 	ID       int       `json:"id"`
 	Signin   time.Time `json:"signin"`
