@@ -1,7 +1,10 @@
 package gobudins
 
+import "time"
+
 const (
 	RouteAccessToken = "/auth/token/access"
+	RouteUsers       = "/users"
 )
 
 type ErrorResponse struct {
@@ -23,4 +26,10 @@ type AskForToken struct {
 type GetAccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`
+}
+
+type User struct {
+	ID       int       `json:"id"`
+	Signin   time.Time `json:"signin"`
+	Platform int       `json:"platform"`
 }

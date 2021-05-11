@@ -1,9 +1,17 @@
 package gobudins
 
-import "time"
+import (
+	"fmt"
+	"net/http"
 
-type WebhookUser struct {
-	ID       int       `json:"id"`
-	Signin   time.Time `json:"signin"`
-	Platform int       `json:"platform"`
+	"github.com/pkg/errors"
+)
+
+func (ctrl *Controller) GetUser(id string, token string) (user User, err error) {
+	err = ctrl.request(http.MethodGet, fmt.Sprintf("%s/%s", RouteUsers, id), nil, nil, token, &user)
+	if err != nil {
+		return user, errors.Wrap(err, "failed to request budget insight api")
+	}
+
+	return
 }
