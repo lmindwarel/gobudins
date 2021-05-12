@@ -3,8 +3,9 @@ package gobudins
 import "time"
 
 const (
-	RouteAccessToken = "/auth/token/access"
-	RouteUsers       = "/users"
+	RouteAccessToken   = "/auth/token/access"
+	RouteUsers         = "/users"
+	RouteAuthTokenCode = "/auth/token/code"
 )
 
 type ErrorResponse struct {

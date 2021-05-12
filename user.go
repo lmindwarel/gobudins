@@ -15,3 +15,12 @@ func (ctrl *Controller) GetUser(id string, token string) (user User, err error) 
 
 	return
 }
+
+func (ctrl *Controller) GetTemporaryCode(token string) (code string, err error) {
+	err = ctrl.request(http.MethodGet, RouteAuthTokenCode, nil, nil, token, &code)
+	if err != nil {
+		return code, errors.Wrap(err, "failed to request budget insight api")
+	}
+
+	return
+}
