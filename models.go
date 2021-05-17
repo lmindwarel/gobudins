@@ -5,6 +5,7 @@ import "time"
 const (
 	RouteAccessToken   = "/auth/token/access"
 	RouteUsers         = "/users"
+	RouteAccounts      = "/accounts"
 	RouteAuthTokenCode = "/auth/token/code"
 )
 
@@ -24,7 +25,7 @@ type AskForToken struct {
 	ClientSecret string `json:"client_secret"`
 }
 
-type GetAccessTokenResponse struct {
+type Token struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`
 }
@@ -35,4 +36,100 @@ type User struct {
 	ID       int       `json:"id"`
 	Signin   time.Time `json:"signin"`
 	Platform int       `json:"platform"`
+}
+
+// Account as described at https://docs.budget-insight.com/reference/bank-accounts#response-bankaccount-object
+type Account struct {
+	ID           int              `json:"id"`
+	ConnectionID *int             `json:"id_connection"`
+	UserID       *int             `json:"id_user"`
+	SourceID     *int             `json:"id_source"`
+	ParentID     *int             `json:"id_parent"`
+	Number       *string          `json:"number"`
+	OriginalName string           `json:"original_name"`
+	Balance      *float64         `json:"balance"`
+	Coming       *float64         `json:"comming"`
+	Display      bool             `json:"display"`
+	LastUpdate   *time.Time       `json:"last_update"`
+	Deleted      *time.Time       `json:"deleted"`
+	Disabled     *time.Time       `json:"disabled"`
+	IBAN         *string          `json:"iban"`
+	Currency     *Currency        `json:"currency"`
+	Type         AccountType      `json:"type"`
+	TypeID       int              `json:"id_type"`
+	Bookmarked   int              `json:"bookmarked"`
+	Name         string           `json:"name"`
+	Error        *string          `json:"error"`
+	Usage        BankAccountUsage `json:"usage"`
+	Ownsership   string           `json:"ownership"`
+	CompanyName  *string          `json:"company_name"`
+	Loan         *Loan            `json:"loan"`
+}
+
+// BankAccountUsage as described at https://docs.budget-insight.com/reference/bank-accounts#bankaccountusage-values
+type BankAccountUsage string
+
+const (
+	BankAccountUsagePriv BankAccountUsage = "PRIV"
+	BankAccountUsageOrga BankAccountUsage = "ORGA"
+	BankAccountUsageAsso BankAccountUsage = "ASSO"
+)
+
+// Loan as described at https://docs.budget-insight.com/reference/bank-accounts#loan-object
+type Loan struct {
+	TotalAmount       *float64   `json:"total_amount"`
+	AvailableAmount   *float64   `json:"available_amount"`
+	UsedAcmount       *float64   `json:"used_amount"`
+	SubscriptionDate  *time.Time `json:"subscription_date"`
+	MaturityDate      *time.Time `json:"maturity_date"`
+	NextPaymentAmount *float64   `json:"next_payment_amount"`
+	NextPatmentAmount *time.Time `json:"next_payment_date"`
+	Rate              *float64   `json:"rate"`
+	NbPaymentsLeft    *int       `json:"nb_payments_left"`
+	NbPaymentsDone    *int       `json:"nb_payments_done"`
+	NbPaymentsTotal   *int       `json:"nb_payments_total"`
+	LastPaymentAmount *float64   `json:"last_payment_amount"`
+	LastPaymentDate   *time.Time `json:"last_payment_date"`
+	AccountLabel      *string    `json:"account_label"`
+	InsuranceLabel    *string    `json:"insurance_label"`
+	Duration          *int       `json:"duration"`
+}
+
+type Currency struct {
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Symbol    string `json:"symbol"`
+	Precision int    `json:"precision"`
+}
+
+type AccountTypeName string
+
+const (
+	AccountTypeNameCheckings      AccountTypeName = "checking"
+	AccountTypeNameSavings        AccountTypeName = "savings"
+	AccountTypeNameDeposit        AccountTypeName = "deposit"
+	AccountTypeNameLoan           AccountTypeName = "loan"
+	AccountTypeNameMarket         AccountTypeName = "market"
+	AccountTypeNameJoint          AccountTypeName = "joint"
+	AccountTypeNameCard           AccountTypeName = "card"
+	AccountTypeNameLifeInsurance  AccountTypeName = "lifeinsurance"
+	AccountTypeNamePEE            AccountTypeName = "pee"
+	AccountTypeNamePERCO          AccountTypeName = "perco"
+	AccountTypeNameArticle83      AccountTypeName = "article83"
+	AccountTypeNameRSP            AccountTypeName = "rsp"
+	AccountTypeNamePEA            AccountTypeName = "pea"
+	AccountTypeNameCapitalisation AccountTypeName = "capitalisation"
+	AccountTypeNamePERP           AccountTypeName = "perp"
+	AccountTypeNameMadelin        AccountTypeName = "madelin"
+	AccountTypeNameUnknow         AccountTypeName = "unknown"
+)
+
+// AccountType as described at https://docs.budget-insight.com/reference/bank-account-types#response-accounttype-object
+type AccountType struct {
+	ID           int             `json:"id"`
+	Name         AccountTypeName `json:"name"`
+	ParentID     *int            `json:"id_parent"`
+	IsInvest     bool            `json:"is_invest"`
+	DisplayName  string          `json:"display_name"`
+	DisplayNameP string          `json:"display_name_p"`
 }

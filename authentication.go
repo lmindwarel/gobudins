@@ -6,18 +6,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (ctrl *Controller) GetToken(ccd ConnectCallbackData) (token string, err error) {
-	var authToken GetAccessTokenResponse
+func (ctrl *Controller) GetToken(ccd ConnectCallbackData) (token Token, err error) {
 	err = ctrl.request(http.MethodPost, RouteAccessToken, nil, AskForToken{
 		Code:         ccd.Code,
 		ClientID:     ctrl.config.ClientID,
 		ClientSecret: ctrl.config.ClientSecret,
-	}, "", &authToken)
-	if err != nil {
-		return token, errors.Wrap(err, "failed to request budget insight api")
-	}
+	}, "", &token)
 
-	token = authToken.AccessToken
-
-	return token, err
+	return token, errors.Wrap(err, "failed to request budget insight api")
 }
