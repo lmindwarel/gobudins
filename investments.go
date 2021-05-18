@@ -1,17 +1,19 @@
 package gobudins
 
-// func (ctrl *Controller) GetToken(ccd ConnectCallbackData) (token string, err error) {
-// 	var authToken GetAccessTokenResponse
-// 	err = ctrl.request(http.MethodPost, RouteAccessToken, nil, AskForToken{
-// 		Code:         ccd.Code,
-// 		ClientID:     ctrl.config.ClientID,
-// 		ClientSecret: ctrl.config.ClientSecret,
-// 	}, "", &authToken)
-// 	if err != nil {
-// 		return token, errors.Wrap(err, "failed to request budget insight api")
-// 	}
+import (
+	"fmt"
+	"net/http"
 
-// 	token = authToken.AccessToken
+	"github.com/pkg/errors"
+)
 
-// 	return token, err
-// }
+func (ctrl *Controller) GetCurrentUserAccountInvestments(accountID string, token string) (accounts []Account, err error) {
+	return ctrl.GetAccountInvestments(UserMe, accountID, token)
+}
+
+func (ctrl *Controller) GetAccountInvestments(userID string, accountID string, token string) (accounts []Account, err error) {
+	route := fmt.Sprintf("/users/%s/accounts/%s/investments", userID, accountID)
+	err = ctrl.request(http.MethodGet, route, nil, nil, "", &accounts)
+
+	return accounts, errors.Wrap(err, "failed to request budget insight api")
+}

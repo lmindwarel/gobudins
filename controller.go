@@ -50,7 +50,7 @@ func (ctrl *Controller) request(method string, route string, queryParams map[str
 
 	log.Printf("%s at %s", method, URL)
 
-	var requestBodyReader *bytes.Buffer
+	var requestBodyReader *bytes.Buffer = nil
 	if requestData != nil {
 		if method != http.MethodPost && method != http.MethodPut {
 			return fmt.Errorf("request data can't be sended with %s", method)

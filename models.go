@@ -133,3 +133,43 @@ type AccountType struct {
 	DisplayName  string          `json:"display_name"`
 	DisplayNameP string          `json:"display_name_p"`
 }
+
+type FinanceSecurityType string
+
+const (
+	FinanceSecurityTypeOPCVM   FinanceSecurityType = "OPCVM"
+	FinanceSecurityTypeETF     FinanceSecurityType = "Trackers - ETF"
+	FinanceSecurityTypeActions FinanceSecurityType = "Actions"
+)
+
+type Investment struct {
+	ID                int                  `json:"id"`
+	AccountID         int                  `json:"id_account"`
+	SecurityID        int                  `json:"id_security"`
+	TypeID            *FinanceSecurityType `json:"id_type"`
+	Label             string               `json:"label"`
+	Code              *string              `json:"code"`
+	CodeType          string               `json:"code_type"`
+	Source            string               `json:"source"`
+	Description       *string              `json:"description"`
+	Quantity          float64              `json:"quantity"`
+	UnitPrice         float64              `json:"unitprice"`
+	UnitValue         float64              `json:"unitvalue"`
+	Valuation         float64              `json:"valuation"`
+	Diff              float64              `json:"diff"`
+	DiffPercent       float64              `json:"diff_percent"`
+	PrevDiff          *float64             `json:"prev_diff"`
+	PrevDiffPercent   *float64             `json:"prev_diff_percent"`
+	VDate             time.Time            `json:"vdate"`
+	PrevVDate         *time.Time           `json:"prev_vdate"`
+	PortfolioShare    float64              `json:"portfolio_share"`
+	Calculated        float64              `json:"calculated"`
+	Deleted           *time.Time           `json:"deleted"`
+	LastUpdate        *time.Time           `json:"last_update"`
+	OriginalCurrency  *Currency            `json:"original_currency"`
+	OriginalValuation *float64             `json:"original_valuation"`
+	OriginalUnitvalue *float64             `json:"original_unitvalue"`
+	OriginalUnitprice *float64             `json:"original_unitprice"`
+	OriginalDiff      int                  `json:"original_diff"`
+	// Details           int             `json:"details"`
+}
