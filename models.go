@@ -142,6 +142,15 @@ const (
 	FinanceSecurityTypeActions FinanceSecurityType = "Actions"
 )
 
+type InvestmentsResponse struct {
+	Diff            float64      `json:"diff"`
+	DiffPercent     float64      `json:"diff_percent"`
+	PrevDiff        *float64     `json:"prev_diff"`
+	PrevDiffPercent *float64     `json:"prev_diff_percent"`
+	Valuation       float64      `json:"valuation"`
+	Investments     []Investment `json:"investments"`
+}
+
 type Investment struct {
 	ID                int                  `json:"id"`
 	AccountID         int                  `json:"id_account"`
