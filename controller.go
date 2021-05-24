@@ -50,7 +50,7 @@ func (ctrl *Controller) request(method string, route string, queryParams map[str
 
 	log.Printf("%s at %s", method, URL)
 
-	var requestBodyReader *bytes.Buffer = nil
+	var req *http.Request
 	if requestData != nil {
 		if method != http.MethodPost && method != http.MethodPut {
 			return fmt.Errorf("request data can't be sended with %s", method)
@@ -62,12 +62,15 @@ func (ctrl *Controller) request(method string, route string, queryParams map[str
 
 		log.Printf("json data: %s", requestBody)
 
-		requestBodyReader = bytes.NewBuffer(requestBody)
-	}
-
-	req, err := http.NewRequest(method, URL, requestBodyReader)
-	if err != nil {
-		return errors.Wrap(err, "failed to create request")
+		req, err = http.NewRequest(method, URL, bytes.NewBuffer(requestBody))
+		if err != nil {
+			return errors.Wrap(err, "failed to create request")
+		}
+	} else {
+		req, err = http.NewRequest(method, URL, nil)
+		if err != nil {
+			return errors.Wrap(err, "failed to create request")
+		}
 	}
 
 	req.Header.Set("Content-Type", "application/json")
