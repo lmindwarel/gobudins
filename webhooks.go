@@ -1,6 +1,7 @@
 package gobudins
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,7 @@ func (ctrl *Controller) SetupRoutesGin(e *gin.RouterGroup) {
 func (ctrl *Controller) whUserCreated(c *gin.Context) {
 	var user User
 	if err := c.ShouldBindJSON(&user); err != nil {
+		fmt.Printf("Failed to unmarshal created user: %s\n", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
@@ -29,6 +31,7 @@ func (ctrl *Controller) whUserCreated(c *gin.Context) {
 func (ctrl *Controller) whAccountSynced(c *gin.Context) {
 	var account SyncedAccount
 	if err := c.ShouldBindJSON(&account); err != nil {
+		fmt.Printf("Failed to unmarshal synced account: %s\n", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}

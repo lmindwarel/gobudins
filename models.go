@@ -73,7 +73,7 @@ type AskForToken struct {
 
 type AskForTokenRenew struct {
 	APICredentials
-	UserID         int  `json:"user_id"`
+	UserID         int  `json:"id_user"`
 	RevokePrevious bool `json:"revoke_previous"`
 }
 
