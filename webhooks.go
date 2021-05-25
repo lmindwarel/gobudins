@@ -7,11 +7,13 @@ import (
 )
 
 type WebhooksListeners struct {
-	OnUserCreated func(User)
+	OnUserCreated   func(User)
+	OnAccountSynced func(SyncedAccount)
 }
 
 func (ctrl *Controller) SetupRoutesGin(e *gin.RouterGroup) {
-	e.POST("/user-create", ctrl.whUserCreated)
+	e.POST("/user/created", ctrl.whUserCreated)
+	e.POST("/accounts/synced", ctrl.whAccountSynced)
 }
 
 func (ctrl *Controller) whUserCreated(c *gin.Context) {
@@ -22,4 +24,14 @@ func (ctrl *Controller) whUserCreated(c *gin.Context) {
 	}
 
 	ctrl.listeners.OnUserCreated(user)
+}
+
+func (ctrl *Controller) whAccountSynced(c *gin.Context) {
+	var account SyncedAccount
+	if err := c.ShouldBindJSON(&account); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	ctrl.listeners.OnAccountSynced(account)
 }

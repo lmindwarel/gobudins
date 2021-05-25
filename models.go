@@ -14,15 +14,67 @@ type ErrorResponse struct {
 	Description string `json:"error_description"`
 }
 
+type Time struct {
+	time.Time
+}
+
+func (mytime *Time) UnmarshalJSON(b []byte) (err error) {
+	s := string(b)
+
+	// Get rid of the quotes "" around the value.
+	// A second option would be to include them
+	// in the date format string instead, like so below:
+	//   time.Parse(`"`+time.RFC3339Nano+`"`, s)
+	s = s[1 : len(s)-1]
+
+	t, err := time.Parse(time.RFC3339Nano, s)
+	if err != nil {
+		t, err = time.Parse("2006-01-02 15:04:05", s)
+	}
+	mytime.Time = t
+	return
+}
+
+type Date struct {
+	time.Time
+}
+
+func (mydate *Date) UnmarshalJSON(b []byte) (err error) {
+	s := string(b)
+
+	// Get rid of the quotes "" around the value.
+	// A second option would be to include them
+	// in the date format string instead, like so below:
+	//   time.Parse(`"`+time.RFC3339Nano+`"`, s)
+	s = s[1 : len(s)-1]
+
+	t, err := time.Parse(time.RFC3339Nano, s)
+	if err != nil {
+		t, err = time.Parse("2006-01-02", s)
+	}
+	mydate.Time = t
+	return
+}
+
 type ConnectCallbackData struct {
 	Code         string `json:"code"`
 	ConnectionID string `json:"connectionID"`
 }
 
-type AskForToken struct {
-	Code         string `json:"code"`
+type APICredentials struct {
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
+}
+
+type AskForToken struct {
+	APICredentials
+	Code string `json:"code"`
+}
+
+type AskForTokenRenew struct {
+	APICredentials
+	UserID         int  `json:"user_id"`
+	RevokePrevious bool `json:"revoke_previous"`
 }
 
 type Token struct {
@@ -30,12 +82,32 @@ type Token struct {
 	TokenType   string `json:"token_type"`
 }
 
+type TokenAccessType string
+
+const (
+	TokenAccessTypeStandard TokenAccessType = "standard"
+)
+
+type TemporaryCode struct {
+	Code      string          `json:"code"`
+	Type      string          `json:"type"`
+	Access    TokenAccessType `json:"access"`
+	ExpiresIn int             `json:"expires_in"`
+}
+
 const UserMe = "me"
 
 type User struct {
-	ID       int       `json:"id"`
-	Signin   time.Time `json:"signin"`
-	Platform int       `json:"platform"`
+	ID       int    `json:"id"`
+	Signin   Time   `json:"signin"`
+	Platform string `json:"platform"`
+}
+
+type AccountsResponse struct {
+	Balance        float64            `json:"balance"`
+	Balances       map[string]float64 `json:"balances"`
+	ComingBalances map[string]float64 `json:"coming_balances"`
+	Accounts       []Account          `json:"accounts"`
 }
 
 // Account as described at https://docs.budget-insight.com/reference/bank-accounts#response-bankaccount-object
@@ -50,12 +122,12 @@ type Account struct {
 	Balance      *float64         `json:"balance"`
 	Coming       *float64         `json:"comming"`
 	Display      bool             `json:"display"`
-	LastUpdate   *time.Time       `json:"last_update"`
-	Deleted      *time.Time       `json:"deleted"`
-	Disabled     *time.Time       `json:"disabled"`
+	LastUpdate   *Time            `json:"last_update"`
+	Deleted      *Time            `json:"deleted"`
+	Disabled     *Time            `json:"disabled"`
 	IBAN         *string          `json:"iban"`
 	Currency     *Currency        `json:"currency"`
-	Type         AccountType      `json:"type"`
+	Type         AccountTypeName  `json:"type"`
 	TypeID       int              `json:"id_type"`
 	Bookmarked   int              `json:"bookmarked"`
 	Name         string           `json:"name"`
@@ -64,6 +136,11 @@ type Account struct {
 	Ownsership   string           `json:"ownership"`
 	CompanyName  *string          `json:"company_name"`
 	Loan         *Loan            `json:"loan"`
+}
+
+type SyncedAccount struct {
+	Account
+	// TODO: Transaction Transaction `json:"transactions"`
 }
 
 // BankAccountUsage as described at https://docs.budget-insight.com/reference/bank-accounts#bankaccountusage-values
@@ -77,22 +154,22 @@ const (
 
 // Loan as described at https://docs.budget-insight.com/reference/bank-accounts#loan-object
 type Loan struct {
-	TotalAmount       *float64   `json:"total_amount"`
-	AvailableAmount   *float64   `json:"available_amount"`
-	UsedAcmount       *float64   `json:"used_amount"`
-	SubscriptionDate  *time.Time `json:"subscription_date"`
-	MaturityDate      *time.Time `json:"maturity_date"`
-	NextPaymentAmount *float64   `json:"next_payment_amount"`
-	NextPatmentAmount *time.Time `json:"next_payment_date"`
-	Rate              *float64   `json:"rate"`
-	NbPaymentsLeft    *int       `json:"nb_payments_left"`
-	NbPaymentsDone    *int       `json:"nb_payments_done"`
-	NbPaymentsTotal   *int       `json:"nb_payments_total"`
-	LastPaymentAmount *float64   `json:"last_payment_amount"`
-	LastPaymentDate   *time.Time `json:"last_payment_date"`
-	AccountLabel      *string    `json:"account_label"`
-	InsuranceLabel    *string    `json:"insurance_label"`
-	Duration          *int       `json:"duration"`
+	TotalAmount       *float64 `json:"total_amount"`
+	AvailableAmount   *float64 `json:"available_amount"`
+	UsedAcmount       *float64 `json:"used_amount"`
+	SubscriptionDate  *Time    `json:"subscription_date"`
+	MaturityDate      *Time    `json:"maturity_date"`
+	NextPaymentAmount *float64 `json:"next_payment_amount"`
+	NextPatmentAmount *Time    `json:"next_payment_date"`
+	Rate              *float64 `json:"rate"`
+	NbPaymentsLeft    *int     `json:"nb_payments_left"`
+	NbPaymentsDone    *int     `json:"nb_payments_done"`
+	NbPaymentsTotal   *int     `json:"nb_payments_total"`
+	LastPaymentAmount *float64 `json:"last_payment_amount"`
+	LastPaymentDate   *Time    `json:"last_payment_date"`
+	AccountLabel      *string  `json:"account_label"`
+	InsuranceLabel    *string  `json:"insurance_label"`
+	Duration          *int     `json:"duration"`
 }
 
 type Currency struct {
@@ -169,12 +246,12 @@ type Investment struct {
 	DiffPercent       float64              `json:"diff_percent"`
 	PrevDiff          *float64             `json:"prev_diff"`
 	PrevDiffPercent   *float64             `json:"prev_diff_percent"`
-	VDate             time.Time            `json:"vdate"`
-	PrevVDate         *time.Time           `json:"prev_vdate"`
+	VDate             Date                 `json:"vdate"`
+	PrevVDate         *Date                `json:"prev_vdate"`
 	PortfolioShare    float64              `json:"portfolio_share"`
-	Calculated        float64              `json:"calculated"`
-	Deleted           *time.Time           `json:"deleted"`
-	LastUpdate        *time.Time           `json:"last_update"`
+	Calculated        []string             `json:"calculated"`
+	Deleted           *Time                `json:"deleted"`
+	LastUpdate        *Time                `json:"last_update"`
 	OriginalCurrency  *Currency            `json:"original_currency"`
 	OriginalValuation *float64             `json:"original_valuation"`
 	OriginalUnitvalue *float64             `json:"original_unitvalue"`

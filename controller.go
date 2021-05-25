@@ -12,9 +12,10 @@ import (
 )
 
 type Config struct {
-	ClientID     string `mapstructure:"clientID"`
-	ClientSecret string `mapstructure:"clientSecret"`
-	Domain       string `mapstructure:"domain"`
+	ClientID        string `mapstructure:"clientID"`
+	ClientSecret    string `mapstructure:"clientSecret"`
+	Domain          string `mapstructure:"domain"`
+	TokenExpiration int    `mapstructure:"tokenExpiration"`
 }
 
 // Controller is the struct for budget insight controller
@@ -77,7 +78,6 @@ func (ctrl *Controller) request(method string, route string, queryParams map[str
 	if token != "" {
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	}
-	log.Printf("%+v", req)
 
 	q := req.URL.Query()
 	for key, value := range queryParams {
