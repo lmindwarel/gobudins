@@ -126,6 +126,7 @@ type Account struct {
 	Deleted      *Time            `json:"deleted"`
 	Disabled     *Time            `json:"disabled"`
 	IBAN         *string          `json:"iban"`
+	BIC          *string          `json:"bic"`
 	Currency     *Currency        `json:"currency"`
 	Type         AccountTypeName  `json:"type"`
 	TypeID       int              `json:"id_type"`
