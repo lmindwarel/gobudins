@@ -120,7 +120,7 @@ func (ctrl *Controller) request(method string, route string, queryParams map[str
 			// manage error data
 			apiErr, errHandled := apiErrors[errData.Code]
 			if !errHandled {
-				apiErr = ErrAPIUnhandled
+				apiErr = errors.Wrap(ErrAPIUnhandled, errData.Code)
 			}
 
 			return errors.Wrap(apiErr, errData.Description)
