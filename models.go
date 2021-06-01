@@ -260,3 +260,18 @@ type Investment struct {
 	OriginalDiff      int                  `json:"original_diff"`
 	// Details           int             `json:"details"`
 }
+
+// Connection as described at https://docs.budget-insight.com/reference/connections#response-connection-object
+type Connection struct {
+	ID          int  `json:"id"`
+	UserID      *int `json:"id_user"`
+	ConnectorID int  `json:"id_connector"`
+	// State        *ConnectionState `json:"state"`
+	ErrorMessage *string `json:"error_message"`
+	// Fields           []FormFields              `json:"fields"`
+	LastUpdate *Time `json:"last_update"`
+	Created    *Time `json:"created"`
+	Active     bool  `json:"active"`
+	LastPush   *Time `json:"last_push"`
+	NextTry    *Time `json:"next_try"`
+}

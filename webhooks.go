@@ -8,15 +8,18 @@ import (
 )
 
 type WebhooksListeners struct {
-	OnUserCreated     func(User)
-	OnAccountSynced   func(SyncedAccount)
-	OnAccountDisabled func(SyncedAccount)
+	OnUserCreated       func(User)
+	OnAccountSynced     func(SyncedAccount)
+	OnAccountDisabled   func(SyncedAccount)
+	OnConnectionDeleted func(Connection)
 }
 
 func (ctrl *Controller) SetupRoutesGin(e *gin.RouterGroup) {
 	e.POST("/user/created", ctrl.whUserCreated)
 	e.POST("/accounts/synced", ctrl.whAccountSynced)
 	e.POST("/accounts/disabled", ctrl.whAccountDisabled)
+	e.POST("/connection/deleted", ctrl.whConnectionDeleted)
+
 }
 
 func (ctrl *Controller) whUserCreated(c *gin.Context) {
@@ -50,4 +53,15 @@ func (ctrl *Controller) whAccountDisabled(c *gin.Context) {
 	}
 
 	ctrl.listeners.OnAccountDisabled(account)
+}
+
+func (ctrl *Controller) whConnectionDeleted(c *gin.Context) {
+	var connection Connection
+	if err := c.ShouldBindJSON(&connection); err != nil {
+		fmt.Printf("Failed to unmarshal connection: %s\n", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	ctrl.listeners.OnConnectionDeleted(connection)
 }
