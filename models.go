@@ -263,15 +263,29 @@ type Investment struct {
 
 // Connection as described at https://docs.budget-insight.com/reference/connections#response-connection-object
 type Connection struct {
-	ID          int  `json:"id"`
-	UserID      *int `json:"id_user"`
-	ConnectorID int  `json:"id_connector"`
-	// State        *ConnectionState `json:"state"`
-	ErrorMessage *string `json:"error_message"`
+	ID           int              `json:"id"`
+	UserID       *int             `json:"id_user"`
+	ConnectorID  int              `json:"id_connector"`
+	State        *ConnectionState `json:"state"`
+	ErrorMessage *string          `json:"error_message"`
 	// Fields           []FormFields              `json:"fields"`
 	LastUpdate *Time `json:"last_update"`
 	Created    *Time `json:"created"`
 	Active     bool  `json:"active"`
 	LastPush   *Time `json:"last_push"`
 	NextTry    *Time `json:"next_try"`
+}
+
+type ConnectionState struct {
+	SCARequired                 bool `json:"SCARequired"`
+	WebauthRequired             bool `json:"webauthRequired"`
+	AdditionalInformationNeeded bool `json:"additionalInformationNeeded"`
+	Decoupled                   bool `json:"decoupled"`
+	Validating                  bool `json:"validating"`
+	ActionNeeded                bool `json:"actionNeeded"`
+	PasswordExpired             bool `json:"passwordExpired"`
+	Wrongpass                   bool `json:"SCAwrongpassRequired"`
+	RateLimiting                bool `json:"rateLimiting"`
+	WebsiteUnavailable          bool `json:"websiteUnavailable"`
+	Bug                         bool `json:"bug"`
 }
