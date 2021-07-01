@@ -144,6 +144,11 @@ type SyncedAccount struct {
 	// TODO: Transaction Transaction `json:"transactions"`
 }
 
+type UpdateAccount struct {
+	Display  bool `json:"display"`
+	Disabled bool `json:"disabled"`
+}
+
 // BankAccountUsage as described at https://docs.budget-insight.com/reference/bank-accounts#bankaccountusage-values
 type BankAccountUsage string
 
